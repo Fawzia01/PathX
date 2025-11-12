@@ -1,0 +1,250 @@
+/* --- Jobs Page --- */
+.jobs-page {
+  padding: 2rem;
+  background-color: #f0f4ff; /* slightly lighter blue background */
+  min-height: 100vh;
+  text-align: center;
+}
+
+.jobs-page h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #1e3a8a; /* deeper blue */
+  letter-spacing: 0.5px;
+}
+
+.filter-bar {
+  margin-bottom: 2rem;
+}
+
+.filter-bar button {
+  background: #e0e0e0;
+  border: none;
+  margin: 0 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.filter-bar button.active,
+.filter-bar button:hover {
+  background: linear-gradient(90deg, #1d4ed8, #60a5fa); /* vivid blue gradient */
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* --- Jobs Grid --- */
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 cards per row */
+  gap: 2rem;
+  justify-content: center;
+  align-items: stretch; /* cards same height */
+}
+
+/* --- Job Card --- */
+.job-card {
+  position: relative;
+  background: linear-gradient(145deg, #ffffff, #ffffff); /* soft gradient inside */
+  border-radius: 18px;
+  padding: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  border: 3px solid color rgb(103, 147, 229); /* for gradient border */
+  background-clip: padding-box;
+  border-color: #1e40af;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+}
+
+/* Gradient border effect */
+.job-card::before {
+  content: '';
+  position: absolute;
+  top: -3px; left: -3px; right: -3px; bottom: -3px;
+  border-radius: 21px;
+  background: linear-gradient(90deg, #f6f9fa, #dfe6f0);
+  z-index: -1;
+}
+
+/* Hover effect */
+.job-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+/* Job summary content */
+.job-summary {
+  border: 2px solid #3b82f6; /* vivid blue border */
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f9fbff; /* subtle light background */
+  margin-bottom: 0.8rem;
+}
+
+.job-summary img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 0.8rem;
+  border-color: #2563eb;
+  border: 2px solid #3b82f6; /* subtle border for logo */
+}
+
+.job-summary h3 {
+  font-size: 1.15rem;
+  margin: 0.3rem 0;
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.job-summary p {
+  color: #4b5563;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Optional: Skill badges inside card */
+.job-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+
+.job-skills span {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  color: white;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* --- Modal --- */
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.55); /* slightly darker overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+  animation: fadeInBackdrop 0.3s ease;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  text-align: left;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+  position: relative;
+}
+
+.modal-content h2 {
+  color: #1d4ed8;
+  margin-bottom: 1rem;
+}
+
+.modal-content p {
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+.job-type-btn {
+  border: none;
+  padding: 0.25rem 0.7rem; /* smaller padding */
+  border-radius: 15px; /* pill shape */
+  font-weight: 600;
+  color: white;
+  margin: 0.3rem 0.3rem;
+  cursor: default;
+  text-transform: uppercase;
+  font-size: 0.75rem; /* smaller text */
+  display: inline-block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover effect for subtle pop */
+.job-type-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Different gradient colors based on type */
+.job-type-btn.internship {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa); /* blue */
+}
+
+.job-type-btn.part-time {
+  background: linear-gradient(90deg, #14b8a6, #2dd4bf); /* teal */
+}
+
+.job-type-btn.full-time {
+  background: linear-gradient(90deg, #a78bfa, #c4b5fd); /* light purple */
+}
+
+.job-type-btn.freelance {
+  background: linear-gradient(90deg, #f472b6, #f9a8d4); /* pink/purple accent */
+}
+
+
+.close-btn {
+  background: linear-gradient(90deg, #6b86d1, #3b82f6);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1.2rem;
+}
+
+.close-btn:hover {
+  background: linear-gradient(90deg, #1e40af, #2563eb);
+  transform: translateY(-2px);
+}
+
+/* --- Animations --- */
+@keyframes fadeInBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .jobs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .jobs-grid {
+    grid-template-columns: 1fr;
+  }
+  .modal-content {
+    padding: 1.5rem;
+    width: 90%;
+  }
+}
+
+
+
+
