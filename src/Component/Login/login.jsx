@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./login.css";
+import { useNavigate } from "react-router-dom";
+
 
 export default function AuthModal({ isOpen, onClose }) {
   const overlayRef = useRef(null);
@@ -7,6 +9,8 @@ export default function AuthModal({ isOpen, onClose }) {
 
   // Login state
   const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
+
 
   // Signup state
   const [signupData, setSignupData] = useState({
@@ -34,7 +38,10 @@ export default function AuthModal({ isOpen, onClose }) {
     } else {
       document.body.style.overflow = "";
     }
-    return () => (document.body.style.overflow = "");
+    return () => {
+      // restore overflow on unmount/cleanup
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -44,7 +51,9 @@ export default function AuthModal({ isOpen, onClose }) {
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+      }
     };
     if (isOpen) window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -59,7 +68,8 @@ export default function AuthModal({ isOpen, onClose }) {
   };
 
   const handleOverlayClick = (e) => {
-    if (e.target === overlayRef.current) close();
+    // defensive: overlayRef.current may be null temporarily
+    if (overlayRef.current && e.target === overlayRef.current) close();
   };
 
   const validateEmail = (email) =>
@@ -78,17 +88,22 @@ export default function AuthModal({ isOpen, onClose }) {
       setError("Please enter a valid email address.");
       return;
     }
-    // mock success
+
     console.log("Login submit:", loginData);
     setSuccess("Logged in successfully (mock).");
-    setTimeout(close, 900);
+
+    setTimeout(() => {
+      close();
+      navigate("/userdash"); // 🧭 navigate to dashboard after login
+    }, 900);
   };
+
 
   const handleSignupSubmit = (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
-  const { name, email, password, confirm } = signupData;
+    const { name, email, password, confirm } = signupData;
     if (!name || !email || !password || !confirm) {
       setError("Please fill all required fields.");
       return;
@@ -114,8 +129,9 @@ export default function AuthModal({ isOpen, onClose }) {
 
   // Skills handlers
   const addSkill = (value) => {
-    const v = value.trim();
+    const v = String(value || "").trim();
     if (!v) return;
+    // avoid duplicates (case-sensitive comparison as original)
     if (!skills.includes(v)) setSkills((s) => [...s, v]);
     setSkillInput("");
   };
@@ -134,6 +150,9 @@ export default function AuthModal({ isOpen, onClose }) {
     setSkills((s) => s.filter((x) => x !== skill));
   };
 
+  // id for aria-labelledby
+  const titleId = "auth-modal-title";
+
   return (
     <div
       className="auth-overlay"
@@ -141,6 +160,7 @@ export default function AuthModal({ isOpen, onClose }) {
       onMouseDown={handleOverlayClick}
       aria-modal="true"
       role="dialog"
+      aria-labelledby={titleId}
     >
       <div
         className="auth-modal"
@@ -153,12 +173,15 @@ export default function AuthModal({ isOpen, onClose }) {
 
         {/* Header */}
         <div className="auth-header">
-          <h1 className="auth-main-title">{tab === "login" ? "LOGIN" : "SIGN UP"}</h1>
+          <h1 className="auth-main-title" id={titleId}>
+            {tab === "login" ? "LOGIN" : "SIGN UP"}
+          </h1>
           {tab === "login" ? (
             <p className="auth-subtle">
               New here?{" "}
               <button
                 className="link-like"
+                type="button"
                 onClick={() => {
                   setTab("signup");
                 }}
@@ -171,6 +194,7 @@ export default function AuthModal({ isOpen, onClose }) {
               Already have an account?{" "}
               <button
                 className="link-like"
+                type="button"
                 onClick={() => {
                   setTab("login");
                 }}
@@ -181,10 +205,9 @@ export default function AuthModal({ isOpen, onClose }) {
           )}
         </div>
 
-        
         <div className="auth-body">
-          {error && <div className="auth-error">{error}</div>}
-          {success && <div className="auth-success">{success}</div>}
+          {error && <div className="auth-error" role="alert">{error}</div>}
+          {success && <div className="auth-success" role="status">{success}</div>}
 
           {tab === "login" && (
             <form className="auth-form" onSubmit={handleLoginSubmit}>
@@ -325,6 +348,7 @@ export default function AuthModal({ isOpen, onClose }) {
                       onChange={(e) => setSkillInput(e.target.value)}
                       onKeyDown={handleSkillKeyDown}
                       placeholder="Type a skill and press Enter"
+                      aria-label="Skill input"
                     />
                     <button
                       type="button"
